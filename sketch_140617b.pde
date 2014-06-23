@@ -46,8 +46,14 @@ void keyPressed(){
     }
     
   }else{
-    textArea.updateText(key);
+    if(key == BACKSPACE){
+      textArea.deleteText(0,0);
+    }else if(key == ENTER){
+      textArea.insertEOL(0,3);
+    }else{
+      textArea.insertCharAt(0,6,key);
+    }
   }
   // update cursor position and etc.
-  textArea.updateCursor(key);
+  //textArea.updateCursor(key);
 }
