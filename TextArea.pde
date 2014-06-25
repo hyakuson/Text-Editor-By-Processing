@@ -82,37 +82,71 @@ class TextArea {
     //}
   }
   
-  public void moveCursor(char key){
-    if(key == CODED){
+  public void moveCursor(char _key){
+    if(_key == CODED){
       if(keyCode == UP){
-        print("PRESS:UP\n");
         
       }else if(keyCode == DOWN){
-        print("PRESS:DOWN\n");
         
       }else if(keyCode == LEFT){
-        print("PRESS:LEFT\n");
-        
+        moveCursorLeft();
       }else if(keyCode == RIGHT){
         // move cursor to right
-        print("PRESS:RIGHT\n");
         moveCursorRight();
-      }    
+      }
+    }else{
+      if(_key == ENTER){
+        moveCursorStartOfLine();
+        moveCusorDown();
+      }else if(key == BACKSPACE){
+        moveCursorLeft();
+      }else{
+        moveCursorRight();
+      }
     }
   }
   
-  private void moveCursorRight(){
-    if(isOverLineEnd()){
+  public void moveCusorDown(){
+     moveCursorTo(cursor.getLineNo()+1, cursor.getCharNo());
+  }
+  
+  public void moveCursorRight(){
+    if(isLineEnd()){
       if(hasNextLine()){
         // move to next line
         moveCursorTo(cursor.getLineNo()+1,0);
       }
     }else{
-      moveCursorTo(cursor.getLineNo(),cursor.getCharNo()+1);
+      moveCursorTo(cursor.getLineNo(), cursor.getCharNo()+1);
     }
   }
   
-  private boolean isOverLineEnd(){
+  public void moveCursorLeft(){
+    if(cursor.getCharNo()-1 < 0){
+      if(cursor.getLineNo() > 0){
+        moveCursorTo(cursor.getLineNo()-1, lines.get(cursor.getLineNo()-1).getTextLength());
+      }
+      
+    }else{
+      moveCursorTo(cursor.getLineNo(),cursor.getCharNo()-1);
+    }
+  }
+  
+  /**
+   * move cursor to start of line
+   */
+  public void moveCursorStartOfLine(){
+    moveCursorTo(cursor.getLineNo(),0);
+  }
+
+  /**
+   * move cursor to end of line
+   */
+  //public void moveCursorEndOfLine(){
+  //  moveCursorTo(cursor.getLineNo(),lines.get(cursor.getLineNo()).getTextLength());
+  //}
+  
+  private boolean isLineEnd(){
     return cursor.getCharNo() >= lines.get(cursor.getLineNo()).getTextLength();
   }
   
@@ -120,22 +154,37 @@ class TextArea {
     return cursor.getLineNo()+1 < lines.size();
   }
   
+  void input(char _key){
+    if(_key == CODED){
+      if(keyCode==SHIFT){
+        
+      } else if(keyCode == CONTROL){
+      
+      } else {
+        // cursor
+        textArea.moveCursor(_key);
+      }    
+    }else{
+      insertCharAt(cursor, _key);
+      moveCursor(_key);
+    }
+  }
+  
   /**
-   * insert text into line:lineNo, char:charNo. <br/>
-   * ex) insertText(N,3,ABCDEFG) => ABCEFG<br/>
-   * lineText = ABCDEFG<br/>
-   * frontStr = AB<br/>
-   * backStr  = DEFG<br/>
-   * 
-   * @param lineNo line number
-   * @param charNo charcter number in line
-   * @param _c insert character
    */
-  void insertCharAt(int lineNo, int charNo, char _c){
-    String lineText = lines.get(lineNo).getText();
-    String frontStr = lineText.substring(0, charNo);
-    String backStr  = charNo == lineText.length() ? "" : lineText.substring(charNo, lineText.length());
-    lines.get(lineNo).setText(frontStr + _c + backStr);
+  void insertCharAt(Cursor cursor, char _c){
+    if(!(_c == CODED)){
+      if(_c == ENTER){
+        insertEOL(cursor.getLineNo(), cursor.getCharNo());
+      }else if(_c == BACKSPACE){
+        deleteText(cursor.getLineNo(), cursor.getCharNo());
+      }else{
+        String lineText = lines.get(cursor.getLineNo()).getText();
+        String frontStr = lineText.substring(0, cursor.getCharNo());
+        String backStr  = cursor.getCharNo() == lineText.length() ? "" : lineText.substring(cursor.getCharNo(), lineText.length());
+        lines.get(cursor.getLineNo()).setText(frontStr + _c + backStr);
+      }
+    }
   }
   
   /**
@@ -195,5 +244,30 @@ class TextArea {
   void printCursorPosition(){
     print("LINE:" + this.cursor.getLineNo() + "\n");
     print("CHAR:" + this.cursor.getCharNo() + "\n");
+  }
+  // DEBUG METHOD
+  void printInputCharacter(char _key){
+    String inputed = "";
+    if(_key == CODED){
+      if(keyCode==SHIFT){
+        inputed = "SHIFT";
+      } else if(keyCode == CONTROL){
+        inputed = "CONTROL";
+      } else if(keyCode == RIGHT){
+        inputed = "RIGHT";
+      } else if(keyCode == LEFT){
+        inputed = "LEFT";
+      } else if(keyCode == UP){
+        inputed = "UP";
+      } else if(keyCode == DOWN){
+        inputed = "DOWN";
+      }
+    }else{
+      if(_key==ENTER) inputed = "ENTER";
+      else if(_key==BACKSPACE) inputed = "BACKSPACE";
+      else if(_key==TAB) inputed = "TAB";
+      else inputed = ""+_key;
+    }
+    print("INPUT:" + inputed + "\n");
   }
 }
