@@ -16,7 +16,7 @@ class InputArea extends Shape{
     this.c      = _c;
   }
   
-  void display(){
+  public void display(){
     rectMode(CORNER);
     noStroke();
     fill(c);

@@ -21,30 +21,19 @@ void draw(){
 }
 
 void keyPressed(){
+  
   if(key == CODED){
     if(keyCode==SHIFT){
       print("SHIFT\n");
     
-    }else if(keyCode == CONTROL){
+    } else if(keyCode == CONTROL){
      print("CONTROL\n");
     
-    }else if(keyCode == UP){
-      //textArea.updateCursor();
-      print("UP\n");
-    
-    }else if(keyCode == DOWN){
-      //textArea.updateCursor();
-      print("DOWN\n");
-    
-    }else if(keyCode == LEFT){
-      //textArea.updateCursor();
-      print("LEFT\n");
-      
-    }else if(keyCode == RIGHT){
-      //textArea.updateCursor();
+    } else {
+      // moving cursor
+      textArea.moveCursor(key);
       print("RIGHT\n");
-    }
-    
+    }    
   }else{
     if(key == BACKSPACE){
       textArea.deleteText(0,0);
@@ -54,6 +43,6 @@ void keyPressed(){
       textArea.insertCharAt(0,6,key);
     }
   }
-  // update cursor position and etc.
-  //textArea.updateCursor(key);
+
+ textArea.printCursorPosition();
 }

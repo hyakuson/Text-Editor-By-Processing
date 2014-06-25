@@ -1,5 +1,5 @@
 class Lines extends Shape{
-  private int size;
+  private int size;  //text size
   
   private String text;
   
@@ -27,17 +27,16 @@ class Lines extends Shape{
   
   /**
    * get text height(pixel)
-   * FIXME: strictly, incorrect ...?
    */
   int getTextHeight(){
     return this.size;
   }
+  
   /**
    * get text width(pixel)
-   *
    */
   int getTextWidth(){
-    //get textWidth() correctry, must call textSize() before.
+    // get text width correctry, must call textSize() before.
     textSize(this.size);
     return (int)textWidth(this.text);
   }
@@ -51,15 +50,6 @@ class Lines extends Shape{
   }
   
   /**
-   * delete a character
-   */
-  void backspace(){
-    if(getTextLength()>0){
-      this.text = this.text.substring(0, getTextLength()-1);
-    }
-  }
-  
-  /**
    * get inputed text length (includes line ends)
    */
   int getTextLength(){
@@ -69,8 +59,8 @@ class Lines extends Shape{
   void display(int offsetX, int offsetY, int lineNo){
     fill(this.c);
     textSize(this.size);
-    // FIXME: 1.2 and 1.08 is adjast scale(unsure...)
+    // 1.2 and 1.08 is adjast scale
     text(this.text, offsetX * 1.2,
-         ((offsetY + textAscent()-textDescent()) * 1.08)*(lineNo+1));
+         ((offsetY + textAscent() - textDescent()) * 1.08) * (lineNo + 1));
   }
 }

@@ -3,11 +3,11 @@ class Shape{
   protected int width,height;
   protected color c;
 
-  int getPositionX(){
+  int getX(){
     return this.x;
   }
 
-  int getPositionY(){
+  int getY(){
     return this.y;
   }
   

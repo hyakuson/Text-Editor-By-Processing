@@ -2,13 +2,13 @@ import java.util.LinkedList;
 
 class TextArea {
   // text area property
-  int x, y, width, height;
+  int x, y;
+  int width, height;
   color textarea_color;
-  int all_lines; 
-  int all_characters;
-  // line/character number of cursor position
-  int cursor_line_num;
-  int cursor_char_num;
+
+  // cursor position
+  int cursorLineNo;
+  int cursorCharNo;
   
   int INIT_LINE_COUNT=6;
 
@@ -16,17 +16,10 @@ class TextArea {
   InputArea inputArea;
 
   // cursor
-  //Cursor cursor;
-
-  /**
-   * return cursor position(
-   */
-  //int cursor_at(){
-  //}
+  Cursor cursor;
 
   // inputed text lines
-  //ArrayList<Lines> lines = new ArrayList<Lines>();
-    LinkedList<Lines> lines = new LinkedList<Lines>();
+  LinkedList<Lines> lines = new LinkedList<Lines>();
   
   /**
    * constractor
@@ -42,21 +35,22 @@ class TextArea {
     this.height = _h;
 
     // text area backgroud color
-    textarea_color = color(255, 0, 0);
+    this.textarea_color = color(204);
 
     // input area
-    inputArea = new InputArea(this.x + 5, this.y + 5, 
-                              this.x + this.width  - (5 + 5), this.y + this.height - (5 + 5), 
-                              color(0, 255, 0));
+    inputArea = new InputArea(this.x + 5,
+                              this.y + 5, 
+                              this.x + this.width  - (5 + 5),
+                              this.y + this.height - (5 + 5), 
+                              color(255));
 
     // text
     for(int i=0; i<INIT_LINE_COUNT; i++){
-      if(i==3){
-        lines.add(new Lines(""));
-      }else{
-        lines.add(new Lines("LINE:"+i));
-      }
+      lines.add(new Lines("LINE:"+i));
     }
+    
+    // cursor
+    cursor = new Cursor(lines.get(0),0,0);
   }
 
   void display() {
@@ -76,20 +70,54 @@ class TextArea {
     }
 
     // draw cursor
-    //cursor.display();
-
-    // TODO: draw scrollbar
+    cursor.display();
   }
   
-  void moveCursorTo(int lineNo, int charNo){
+  public void moveCursorTo(int lineNo, int charNo){
+    // if lineNo or charNo is in not exist position, throw exception. 
+    //try{
+      cursor.updateCurrentLine(lines.get(lineNo), lineNo, charNo);
+    //} catch(Exception e){
+
+    //}
   }
-  void moveCursorRight(int cursorPos){
+  
+  public void moveCursor(char key){
+    if(key == CODED){
+      if(keyCode == UP){
+        print("PRESS:UP\n");
+        
+      }else if(keyCode == DOWN){
+        print("PRESS:DOWN\n");
+        
+      }else if(keyCode == LEFT){
+        print("PRESS:LEFT\n");
+        
+      }else if(keyCode == RIGHT){
+        // move cursor to right
+        print("PRESS:RIGHT\n");
+        moveCursorRight();
+      }    
+    }
   }
-  void moveCursorLeft(int cursorPos){
+  
+  private void moveCursorRight(){
+    if(isOverLineEnd()){
+      if(hasNextLine()){
+        // move to next line
+        moveCursorTo(cursor.getLineNo()+1,0);
+      }
+    }else{
+      moveCursorTo(cursor.getLineNo(),cursor.getCharNo()+1);
+    }
   }
-  void moveCursorUp(int cursorPos){
+  
+  private boolean isOverLineEnd(){
+    return cursor.getCharNo() >= lines.get(cursor.getLineNo()).getTextLength();
   }
-  void moveCursorDown(int cursorPos){
+  
+  private boolean hasNextLine(){
+    return cursor.getLineNo()+1 < lines.size();
   }
   
   /**
@@ -161,5 +189,11 @@ class TextArea {
     
     lines.get(lineNo).setText(frontStr);
     lines.add(lineNo+1, new Lines(backStr));
+  }
+
+  // DEBUG METHOD
+  void printCursorPosition(){
+    print("LINE:" + this.cursor.getLineNo() + "\n");
+    print("CHAR:" + this.cursor.getCharNo() + "\n");
   }
 }
