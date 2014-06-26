@@ -85,13 +85,12 @@ class TextArea {
   public void moveCursor(char _key){
     if(_key == CODED){
       if(keyCode == UP){
-        
+        moveCursorUp();
       }else if(keyCode == DOWN){
-        
+        moveCusorDown();
       }else if(keyCode == LEFT){
         moveCursorLeft();
       }else if(keyCode == RIGHT){
-        // move cursor to right
         moveCursorRight();
       }
     }else{
@@ -106,8 +105,28 @@ class TextArea {
     }
   }
   
+  public void moveCursorUp(){
+    if(hasBeforeLine()){
+      if(isExistsCharcterAtBeforeLine()){
+        moveCursorStartOfLine();
+        moveCursorTo(cursor.getLineNo()-1, cursor.getCharNo());
+        moveCursorEndOfLine();
+      }else{
+        moveCursorTo(cursor.getLineNo()-1,cursor.getCharNo());
+      }
+    }
+  }
+  
   public void moveCusorDown(){
-     moveCursorTo(cursor.getLineNo()+1, cursor.getCharNo());
+    if(hasNextLine()){
+      if(isExistsCharcterAtNextLine()){
+        moveCursorStartOfLine();
+        moveCursorTo(cursor.getLineNo()+1, cursor.getCharNo());
+        moveCursorEndOfLine();
+      }else{
+        moveCursorTo(cursor.getLineNo()+1, cursor.getCharNo());
+      }
+    }
   }
   
   public void moveCursorRight(){
@@ -142,19 +161,29 @@ class TextArea {
   /**
    * move cursor to end of line
    */
-  //public void moveCursorEndOfLine(){
-  //  moveCursorTo(cursor.getLineNo(),lines.get(cursor.getLineNo()).getTextLength());
-  //}
+  public void moveCursorEndOfLine(){
+    moveCursorTo(cursor.getLineNo(),lines.get(cursor.getLineNo()).getTextLength());
+  }
   
   private boolean isLineEnd(){
     return cursor.getCharNo() >= lines.get(cursor.getLineNo()).getTextLength();
   }
   
+  private boolean isExistsCharcterAtBeforeLine(){
+    return lines.get(cursor.getLineNo()-1).getTextLength() < cursor.getCharNo();
+  }
+  private boolean isExistsCharcterAtNextLine(){
+    return lines.get(cursor.getLineNo()+1).getTextLength() < cursor.getCharNo();
+  }
+  
+  private boolean hasBeforeLine(){
+    return cursor.getLineNo()-1 >= 0;
+  }
   private boolean hasNextLine(){
     return cursor.getLineNo()+1 < lines.size();
   }
   
-  void input(char _key){
+  public void input(char _key){
     if(_key == CODED){
       if(keyCode==SHIFT){
         
@@ -177,7 +206,7 @@ class TextArea {
       if(_c == ENTER){
         insertEOL(cursor.getLineNo(), cursor.getCharNo());
       }else if(_c == BACKSPACE){
-        deleteText(cursor.getLineNo(), cursor.getCharNo());
+        deleteTextAt(cursor.getLineNo(), cursor.getCharNo());
       }else{
         String lineText = lines.get(cursor.getLineNo()).getText();
         String frontStr = lineText.substring(0, cursor.getCharNo());
@@ -190,7 +219,7 @@ class TextArea {
   /**
    * delete text at line:lineNo, char:charNo
    */
-  void deleteText(int lineNo, int charNo){
+  void deleteTextAt(int lineNo, int charNo){
     String lineText = lines.get(lineNo).getText();
     String frontStr,backStr;
 
