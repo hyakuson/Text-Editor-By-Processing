@@ -10,6 +10,9 @@ class TextArea {
   int cursorLineNo;
   int cursorCharNo;
   
+  // FIXME: keeping backspace
+  int backspaceNum=0;
+  
   int INIT_LINE_COUNT=6;
 
   // input area
@@ -99,6 +102,8 @@ class TextArea {
         moveCusorDown();
       }else if(key == BACKSPACE){
         moveCursorLeft();
+        moveCursorTo(cursor.getLineNo(),cursor.getCharNo()-backspaceNum);
+        backspaceNum=0;
       }else{
         moveCursorRight();
       }
@@ -207,6 +212,8 @@ class TextArea {
         insertEOL(cursor.getLineNo(), cursor.getCharNo());
       }else if(_c == BACKSPACE){
         deleteTextAt(cursor.getLineNo(), cursor.getCharNo());
+      }else if(_c == TAB){
+        
       }else{
         String lineText = lines.get(cursor.getLineNo()).getText();
         String frontStr = lineText.substring(0, cursor.getCharNo());
@@ -238,6 +245,7 @@ class TextArea {
           frontStr = "";
           backStr  = lineText.substring(0, lineText.length());
           lines.get(lineNo-1).setText(lines.get(lineNo-1).getText() + backStr);
+          backspaceNum = backStr.length();
         }
       }else if(charNo == lineText.length()){
         // end character of line
