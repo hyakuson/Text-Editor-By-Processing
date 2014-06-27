@@ -100,12 +100,15 @@ class TextArea {
       if(_key == ENTER){
         moveCursorStartOfLine();
         moveCusorDown();
-      }else if(key == BACKSPACE){
+      } else if(key == BACKSPACE){
         moveCursorLeft();
         moveCursorTo(cursor.getLineNo(),cursor.getCharNo()-backspaceNum);
         backspaceNum=0;
-      }else{
+      } else if((int)_key >= 32 && (int)_key < 127){
+        // input normal charcter
         moveCursorRight();
+      } else {
+        
       }
     }
   }
@@ -198,13 +201,18 @@ class TextArea {
         // cursor
         textArea.moveCursor(_key);
       }    
-    }else{
+    } else if((int)_key >= 32 && (int)_key < 127
+              || _key == BACKSPACE
+              || _key == ENTER){
       insertCharAt(cursor, _key);
       moveCursor(_key);
+    } else if(_key == TAB){
+    
     }
   }
   
   /**
+   * insert a charcter at cursor position.
    */
   void insertCharAt(Cursor cursor, char _c){
     if(!(_c == CODED)){
@@ -224,7 +232,7 @@ class TextArea {
   }
   
   /**
-   * delete text at line:lineNo, char:charNo
+   * delete character at line:lineNo, char:charNo
    */
   void deleteTextAt(int lineNo, int charNo){
     String lineText = lines.get(lineNo).getText();
@@ -258,8 +266,6 @@ class TextArea {
         backStr  = lineText.substring(charNo, lineText.length());
         lines.get(lineNo).setText(frontStr + backStr);
       }
-      // TODO: cursor position of charcter -1
-      // cursorPos-1
     }
   }
   
@@ -290,6 +296,8 @@ class TextArea {
         inputed = "SHIFT";
       } else if(keyCode == CONTROL){
         inputed = "CONTROL";
+      } else if(keyCode == ALT){
+        inputed = "ALT";
       } else if(keyCode == RIGHT){
         inputed = "RIGHT";
       } else if(keyCode == LEFT){
