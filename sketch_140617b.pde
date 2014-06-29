@@ -4,19 +4,17 @@
 /* stroke   : noStroke
 /*/
 
-color bgc = color(204);
-
 Effect effect;
 TextArea textArea;
 
 void setup(){
-  size(200,200);
-  effect   = new Effect(bgc);
-  textArea = new TextArea(0,0,height,width);
+  size(500,200);
+  effect   = new Effect(0,color(204));
+  textArea = new TextArea(0,0,width,height);
 }
 
 void draw(){
-  effect.paint(bgc);
+  effect.display();
   textArea.display();
 }
 

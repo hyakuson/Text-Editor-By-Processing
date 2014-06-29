@@ -22,5 +22,4 @@ class InputArea extends Shape{
     fill(c);
     rect(this.x, this.y, this.width, this.height);
   }
-  
 }

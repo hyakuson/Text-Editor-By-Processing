@@ -1,22 +1,38 @@
 class Effect{
-  color background_color;
+  color backgroundColor;
+  int mode;
+  final int PAINT = 0;
+  final int FADE  = 1;
+ 
+  Effect(int _mode, color _c){
+    this.mode = _mode;
+    backgroundColor = _c;    
+  }
   
-  Effect(){
+  public void fade(){
+    int r = (int)red(backgroundColor);
+    int g = (int)green(backgroundColor);
+    int b = (int)blue(backgroundColor);
     
-  }
-  
-  Effect(color _c){
-    background_color = _c;
-  }
-  
-  public void fade(color _c){
-    fill(red(_c),green(_c),blue(_c),10);
-    rect(0,0,width,height);
-  }
-  
-  public void paint(color _c){
-    fill(_c);
+    fill(r,g,b,10);
     noStroke();
     rect(0,0,width,height);
+  }
+  
+  public void paint(){
+    fill(backgroundColor);
+    noStroke();
+    rect(0,0,width,height);
+  }
+  
+  public void display(){
+    switch(this.mode){
+      case PAINT :
+        this.paint();
+        break;
+      case FADE :
+        this.fade();
+        break;
+    }
   }
 }

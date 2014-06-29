@@ -14,6 +14,8 @@ class TextArea {
   int backspaceNum=0;
   
   int INIT_LINE_COUNT=6;
+  
+  int INPUTAREA_MARGIN = 5;
 
   // input area
   InputArea inputArea;
@@ -41,16 +43,14 @@ class TextArea {
     this.textarea_color = color(204);
 
     // input area
-    inputArea = new InputArea(this.x + 5,
-                              this.y + 5, 
-                              this.x + this.width  - (5 + 5),
-                              this.y + this.height - (5 + 5), 
+    inputArea = new InputArea(this.x + INPUTAREA_MARGIN,
+                              this.y + INPUTAREA_MARGIN, 
+                              _w - 2*INPUTAREA_MARGIN,
+                              _h - 2*INPUTAREA_MARGIN, 
                               color(255));
 
-    // text
-    for(int i=0; i<INIT_LINE_COUNT; i++){
-      lines.add(new Lines("LINE:"+i));
-    }
+    // initialize text
+    lines.add(new Lines(""));
     
     // cursor
     cursor = new Cursor(lines.get(0),0,0);
